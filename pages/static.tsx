@@ -15,6 +15,7 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       staticData,
     },
+    revalidate: 10
   };
 };
 const Static: NextPage = (props: { staticData?: ApiResponse }) => {
