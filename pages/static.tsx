@@ -1,7 +1,6 @@
 import { Container, Row, Col } from "reactstrap";
 import { NextPage, GetStaticProps } from "next";
 import { useEffect, useState } from "react";
-
 interface ApiResponse {
   name: string;
   timestamp: Date;
@@ -15,7 +14,7 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       staticData,
     },
-    revalidate: 10
+    revalidate: 10,
   };
 };
 const Static: NextPage = (props: { staticData?: ApiResponse }) => {
@@ -29,18 +28,21 @@ const Static: NextPage = (props: { staticData?: ApiResponse }) => {
     setClientSidestaticData(staticData);
   };
   return (
-    <Container>
-      <Row>
-        <Col>
-          <h1>Gerado estaticamente durande o build:</h1>
-          <h2>{props.staticData?.timestamp.toString()}</h2>
-        </Col>
-        <Col>
-          <h1>Dados gerados através do cliente:</h1>
-          <h2>{clientSidestaticData?.timestamp.toString()}</h2>
-        </Col>
-      </Row>
-    </Container>
+    <>
+
+      <Container>
+        <Row>
+          <Col>
+            <h1>Gerado estaticamente durande o build:</h1>
+            <h2>{props.staticData?.timestamp.toString()}</h2>
+          </Col>
+          <Col>
+            <h1>Dados gerados através do cliente:</h1>
+            <h2>{clientSidestaticData?.timestamp.toString()}</h2>
+          </Col>
+        </Row>
+      </Container>
+    </>
   );
 };
 
