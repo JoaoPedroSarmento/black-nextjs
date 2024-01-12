@@ -11,17 +11,20 @@ import {
   fetchProducts,
   ProductType,
 } from "@/src/services/products";
+import { useRouter } from "next/router";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const id = context.params?.id;
 
   if (typeof id === "string") {
     const product = await fetchProduct(id);
-
-    return { props: { product }, revalidate: 10 };
+    if (product) {
+      return { props: { product }, revalidate: 10 };
+    }
   }
-
-  return { redirect: { destination: "/products", permanent: false } };
+  return {
+    redirect: { destination: `/products/${id}`, permanent: false },
+  };
 };
 export const getStaticPaths: GetStaticPaths = async () => {
   const products = await fetchProducts();
@@ -32,14 +35,18 @@ export const getStaticPaths: GetStaticPaths = async () => {
       },
     };
   });
-  return { paths, fallback: false };
+  return { paths, fallback: true };
 };
 const Product: NextPage = (props: {
   children?: ReactNode;
   product?: ProductType;
 }) => {
+  const router = useRouter();
+  if (router.isFallback) {
+    return <h1>Ops... Deu ruim!</h1>;
+  }
   return (
-    <div>
+    <>
       <Head>
         <title>{props.product!.name}</title>
         <meta name="description" content={props.product!.description} />
@@ -51,7 +58,7 @@ const Product: NextPage = (props: {
       <Container className="mt-5">
         <ProductDetails product={props.product!} />
       </Container>
-    </div>
+    </>
   );
 };
 
